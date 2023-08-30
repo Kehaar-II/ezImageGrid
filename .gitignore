@@ -1,0 +1,11 @@
+# Workspace Files
+*.code-workspace
+.vscode
+.gitignore
+
+# Test Files
+testImage*
+testFiles
+
+# Interpreter Files
+__pycache__
