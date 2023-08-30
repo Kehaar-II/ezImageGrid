@@ -5,19 +5,31 @@ from math import ceil
 
 supportedFormats = [".png", ".jpg", ".jpeg", ".gif", ".ppm", ".tiff", ".bmp", ".PNG", ".JPG", ".JPEG", ".GIF", ".PPM", ".TIFF", ".BMP"]
 maxdigit = 4
-imageSize = [200, 300]
+desiredSize = [200, 300]
+desiredRation = desiredSize[1] / desiredSize[0]
 
 def cropImage(img):
     '''PIL image -> PIL image'''
 
     width, height = img.size
-    ratio = 1
-    if height > width:
-        ratio = height / imageSize[1]
-    else:
-        ratio = width / imageSize[0]
-    img = img.resize((int(width / ratio), int(height / ratio)))
+    # ratio = 1
+    # if height > width:
+    #     ratio = height / desiredSize[1]
+    # else:
+    #     ratio = width / desiredSize[0]
+    # img = img.resize((int(width / ratio), int(height / ratio)))
 
+    ratio = height / width
+    # image too tall, must use width as reference
+    if ratio > desiredRation:
+        img = img.resize((desiredSize[0], int(height / (width / desiredSize[0]))))
+        cropAmount = (img.size[1] - desiredSize[1]) / 2
+        img = img.crop((0, cropAmount, width, height - cropAmount))
+    # image too wide, must use height as reference
+    else:
+        img = img.resize((int(width / (height / desiredSize[1])), desiredSize[1]))
+        cropAmount = (img.size[0] - desiredSize[0]) / 2
+        img = img.crop((cropAmount, 0 , width - cropAmount, height))
     return img
 
 def assembleImages(imgs, width):
@@ -25,16 +37,16 @@ def assembleImages(imgs, width):
 
     print("combining images")
     height = ceil(len(imgs) / width)
-    totalWidth, totalHeight = imageSize[0] * width, imageSize[1] * height
+    totalWidth, totalHeight = desiredSize[0] * width, desiredSize[1] * height
     img = Image.new(mode="RGB", size=(totalWidth, totalHeight), color = "white")
     currentWidth, currentHeight = 0, 0
 
     for i in range(len(imgs)):
         Image.Image.paste(img, imgs[i], (currentWidth, currentHeight))
-        currentWidth += imageSize[0]
+        currentWidth += desiredSize[0]
         if currentWidth >= totalWidth:
             currentWidth = 0
-            currentHeight += imageSize[1]
+            currentHeight += desiredSize[1]
     img.show()
 
     return 0
@@ -55,8 +67,8 @@ def findImages(path):
             for k in range(maxdigit - (len(str(i)) - 1)):
                 currentfile = path + padding + str(i) + supportedFormats[j]
                 if os.path.isfile(currentfile):
-                    list.append(cropImage(Image.open(currentfile)))
                     print(currentfile.rsplit('/', 1)[-1])
+                    list.append(cropImage(Image.open(currentfile)))
                     hasFoundImageWithCurrentNb = True
                 padding += "0"
                 if (hasFoundImageWithCurrentNb):
