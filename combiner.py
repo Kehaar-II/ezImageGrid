@@ -12,13 +12,6 @@ def cropImage(img):
     '''PIL image -> PIL image'''
 
     width, height = img.size
-    # ratio = 1
-    # if height > width:
-    #     ratio = height / desiredSize[1]
-    # else:
-    #     ratio = width / desiredSize[0]
-    # img = img.resize((int(width / ratio), int(height / ratio)))
-
     ratio = height / width
     # image too tall, must use width as reference
     if ratio > desiredRation:
@@ -43,13 +36,12 @@ def assembleImages(imgs, width):
 
     for i in range(len(imgs)):
         Image.Image.paste(img, imgs[i], (currentWidth, currentHeight))
+        imgs[i].close
         currentWidth += desiredSize[0]
         if currentWidth >= totalWidth:
             currentWidth = 0
             currentHeight += desiredSize[1]
-    img.show()
-
-    return 0
+    return img
 
 def findImages(path):
     '''string -> int'''
@@ -103,6 +95,8 @@ def verifyArgs():
     if ac == 3:
         if not av[2].isnumeric():
             return None, -3
+        elif int(av[2]) <= 0:
+            return None, -3
         return path, int(av[2]) if int(av[2]) >= 0 else 0
     return None, -4
 
@@ -116,8 +110,8 @@ def main():
     images = findImages(dir)
     if images == None:
         return 5
-    assembleImages(images, width if width > 0 else 10)
-
+    img = assembleImages(images, width if width > 0 else 10).save(dir + "output.png")
+    print("new image saved at " + dir + "output.png")
     return 0
 
 exit(main())
