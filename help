@@ -1,0 +1,9 @@
+Usage:
+    python3 %progName% path_to_image_folder [-w|--width nrows] [-s|--sort number|date] [-c|--center top|bottom|both]
+    python3 %progName% -h|--help
+
+Options:
+    -w, --width nrows                       number of images per row in the final grid (10 by default)
+    -s, --sort number|date                  sort the images in the grid either by the number in their filename or by the creation date of the file (number by default)
+    -c, --center top|bottom|both            if there is any incomplete row, centers it in the chosen location(s) (not centered by default)
+    -h, --help                              prints this message
