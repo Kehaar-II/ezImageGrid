@@ -1,8 +1,8 @@
-# imageCombiner
+# ezImageGrid
 a small python script to combine several images into one
 
 ## Requirements
-imageCombiner requires the followings to work:
+ezImageGrid requires the followings to work:
 - Python 3
 - Pillow
 
