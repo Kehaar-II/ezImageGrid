@@ -25,7 +25,7 @@ def cropImage(img):
         if (width <= 0):
             return None
         img = img.crop((0, cropAmount, width, height - cropAmount))
-    # image too wide,uy must use height as reference
+    # image too wide, must use height as reference
     else:
         img = img.resize((int(width / (height / desiredSize[1])), desiredSize[1]))
         cropAmount = (img.size[0] - desiredSize[0]) / 2
