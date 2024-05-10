@@ -2,7 +2,7 @@ from PIL import Image
 import sys
 import os
 import glob
-from math import ceil
+from math import ceil, floor
 
 supportedFormats = [".png", ".jpg", ".jpeg", ".gif", ".ppm", ".tiff", ".bmp", ".PNG", ".JPG", ".JPEG", ".GIF", ".PPM", ".TIFF", ".BMP"]
 maxdigit = 4
@@ -36,21 +36,56 @@ def cropImage(img):
 
 def assembleImages(imgs, width, center):
     '''PIL.Image[], int -> PIL.Image'''
-
-    # TODO: implement centering
+    
     print("combining images")
-    height = ceil(len(imgs) / width)
+    lenght = len(imgs)
+    height = ceil(lenght / width)
     totalWidth, totalHeight = desiredSize[0] * width, desiredSize[1] * height
     img = Image.new(mode="RGB", size=(totalWidth, totalHeight), color = "white")
+    img.paste((0, 0, 0), (0, 0, img.size[0], img.size[1]))
     currentWidth, currentHeight = 0, 0
 
-    for i in range(len(imgs)):
+    startsAt = 0
+    endsAt = lenght
+    gridSize = ceil(lenght / height) * height
+    if (center == "top" or center.startswith("both")):
+        emptyCells = gridSize - lenght
+        if (center == "both"):
+            emptyCells = floor(emptyCells / 2)
+        if (center == "both-bottom"):
+            emptyCells = ceil(emptyCells / 2)
+        currentWidth += int((desiredSize[0] * emptyCells) / 2)
+        startsAt = int(gridSize / height - emptyCells)
+        if (center.startswith("both")):
+            endsAt = gridSize - width - emptyCells
+        for i in range(startsAt):
+            Image.Image.paste(img, imgs[i], (currentWidth, currentHeight))
+            imgs[i].close
+            currentWidth += desiredSize[0]
+        currentWidth, currentHeight = 0, desiredSize[1]
+    if (center == "bottom"):
+        endsAt = gridSize - width
+
+    for i in range(startsAt, endsAt):
         Image.Image.paste(img, imgs[i], (currentWidth, currentHeight))
         imgs[i].close
         currentWidth += desiredSize[0]
-        if currentWidth >= totalWidth:
+        if currentWidth > totalWidth - desiredSize[0]:
             currentWidth = 0
             currentHeight += desiredSize[1]
+
+    if (center.startswith("both")  or center == "bottom"):
+        emptyCells = gridSize - lenght
+        if (center == "both"):
+            emptyCells = ceil(emptyCells / 2)
+        if (center == "both-bottom"):
+            emptyCells = floor(emptyCells / 2)
+        currentWidth += int((desiredSize[0] * emptyCells) / 2)
+        for i in range(endsAt, lenght):
+            Image.Image.paste(img, imgs[i], (currentWidth, currentHeight))
+            imgs[i].close
+            currentWidth += desiredSize[0]
+
     return img
 
 def fileToCroppedImage(filepath):
@@ -151,7 +186,7 @@ def verifyGeneralOptions(width__, sort__, center__, allOtherOptions):
                 return None
             sortMethode = av[i + 1]
         if av[i] in center__:
-            if not av[i + 1] in {"top", "bottom", "both"}:
+            if not av[i + 1] in {"top", "both", "both-bottom", "bottom"}:
                 return None
             center = av[i + 1]
     return width, sortMethode, center, generalOptionCount
