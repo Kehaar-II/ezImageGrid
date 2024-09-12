@@ -22,5 +22,22 @@ $ python3 combiner.py -h|--help
 -f, --files _filename_... &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; files to be used (overrides -s and default file seeking)<br>
 -h, --help &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prints help message
 
+### Example
+
+<div align="center">
+    <h3>Inputs</h3>
+    <img src="https://raw.githubusercontent.com/Kehaar-II/Kehaar-II.github.io/main/READMEs/combiner/input.png" alt="Logo" height="200">
+</div>
+<br>
+<div align="center">
+    <h3>Output</h3>
+    <img src="https://raw.githubusercontent.com/Kehaar-II/Kehaar-II.github.io/main/READMEs/combiner/output.png" alt="Logo" height="200">
+</div>
+<br>
+
+```shell
+$ python3 combiner.py . -w 4
+```
+
 
 written in Python 3.11.3
