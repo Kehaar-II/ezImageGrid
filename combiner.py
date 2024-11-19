@@ -18,25 +18,27 @@ def cropImage(img):
 
     width, height = img.size
     ratio = height / width
+    heightwiseCropAmount = (height - desiredSize[1]) / 2
+    widthwiseCropAmount = (width - desiredSize[0]) / 2
+
     # image too tall, must use width as reference
     if ratio > desiredRation:
         img = img.resize((desiredSize[0], int(height / (width / desiredSize[0]))))
-        cropAmount = (img.size[1] - desiredSize[1]) / 2
         if (width <= 0):
             return None
-        img = img.crop((0, cropAmount, width, height - cropAmount))
+        img = img.crop((0, heightwiseCropAmount, width - widthwiseCropAmount, height - heightwiseCropAmount))
     # image too wide, must use height as reference
     else:
         img = img.resize((int(width / (height / desiredSize[1])), desiredSize[1]))
-        cropAmount = (img.size[0] - desiredSize[0]) / 2
-        if (width - cropAmount <= cropAmount):
+        if (width - widthwiseCropAmount <= widthwiseCropAmount):
             return None
-        img = img.crop((cropAmount, 0 , width - cropAmount, height))
+        img = img.crop((widthwiseCropAmount, 0, width - widthwiseCropAmount, height - heightwiseCropAmount))
+
     return img
 
 def assembleImages(imgs, width, center):
     '''PIL.Image[], int -> PIL.Image'''
-    
+
     print("combining images")
     lenght = len(imgs)
     height = ceil(lenght / width)
@@ -47,7 +49,7 @@ def assembleImages(imgs, width, center):
 
     startsAt = 0
     endsAt = lenght
-    gridSize = ceil(lenght / height) * height
+    gridSize = width * height
     if (center == "top" or center.startswith("both")):
         emptyCells = gridSize - lenght
         if (center == "both"):
